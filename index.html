@@ -1,27 +1,700 @@
 
-<!DOCTYPE html>
-<html lang="en-US">
-<body>
+<html> 
+<head> 
+    <meta charset="UTF-8">
+<div class="heart">&#x2665;</div>
 
-<h1>My Web Page</h1>
-
-<p>Hello everybody!</p>
-
-<p>Translate this page:</p>
-
-<div id="google_translate_element"></div>
-
-<input size="60" type="text" id="box" placeholder="write or paste what you want translated, then press enter">
-
-<script type="text/javascript">
-function googleTranslateElementInit() {
-  new google.translate.TranslateElement({pageLanguage: 'en'}, 'google_translate_element');
+<button type="button" id="submitbutton" onclick="sendpos()">Test</button><!-- 
+<button type="button" id="submitbutton" onclick="sendneg()">负面</button> -->
+<style type="text/css">
+body {
+    background-color: rgb(232, 251, 249);
+} 
+  canvas { border: 1px solid #ccc }
+@keyframes blink {
+    0% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
 }
-</script>
+  .my_animation1{
+    animation: blink 3s 0.2s;
+    animation-iteration-count: infinite;
+}
+  .my_animation2{
+    animation: blink 3s 1s;
+    animation-iteration-count: infinite;
+}
+  .my_animation3{
+    animation: blink 3s 1.8s;
+    animation-iteration-count: infinite;
+}
 
-<script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+  .ribbon {
+  position:absolute;
+  top:0;
+  right:0;
+}
+  .ribbon1 {
+  position:absolute;
+  top:100;
+  right:12;
+}
 
-<p>You can translate the content of this page by selecting a language in the select box.</p>
 
-</body>
+
+
+/* just some  styling*/
+body { 
+  text-align: center; 
+
+}
+
+/* heart div class - in html i used just a simple html simbol entity for heart sign, you can use text or whatever u want*/
+
+.heart {
+  font-size: 550px;
+  color: #e00;
+  animation: beat 5s infinite alternate;
+  transform-origin: center;
+}
+
+/* Heart beat animation */
+@keyframes beat{
+  to { transform: scale(1.4); }
+}
+
+
+</style>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min.js"></script>
+
+<script src='https://code.responsivevoice.org/responsivevoice.js'></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+<!-- <script src="https://d3js.org/d3.v4.min.js"></script> -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.0.4/d3.min.js"></script>
+<script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+ <script src="https://www.gstatic.com/firebasejs/4.1.3/firebase.js"></script> 
+
+<script type="text/javascript"> 
+  var bio = document.getElementById('submitbutton');
+ bio.style.position="absolute";
+bio.style.left = 610+'px';
+ bio.style.top = 580+'px'; 
+
+var finaldata=[];
+var querydata;
+var supercount=0;
+var record=0;
+var newint=0;
+var dontcontinue=0;
+
+ var config = {
+    apiKey: "AIzaSyAuTkRETje_FakM9CgsB4SiJCv2TvweuPs",
+    authDomain: "voice-25bda.firebaseapp.com",
+    databaseURL: "https://voice-25bda.firebaseio.com",
+    projectId: "voice-25bda",
+    storageBucket: "",
+    messagingSenderId: "900867071151"
+  };
+  firebase.initializeApp(config);
+
+   var database = firebase.database();
+
+
+///““大” 算法”
+var samplearray = ["0","1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17","18","19"];
+var stroke1 = samplearray[Math.floor(Math.random()*samplearray.length)];
+
+var indexofStroke1 = samplearray.indexOf(stroke1);
+
+var stroke2 = samplearray[indexofStroke1+5];
+
+var indexofStroke2 = samplearray.indexOf(stroke2)
+
+
+var stroke3 = samplearray[indexofStroke2-1];
+var stroke4 = samplearray[indexofStroke2+1];
+
+
+var indexofStroke3 = samplearray.indexOf(stroke3);
+var indexofStroke4 = samplearray.indexOf(stroke4);
+
+var stroke5 = samplearray[indexofStroke3+5];
+var stroke6 = samplearray[indexofStroke4+5];
+
+
+console.log(stroke1, stroke2, stroke3,stroke4,stroke5,stroke6);
+
+// setTimeout(series,5000);
+ var myTimer; 
+ var thereisaword=0; 
+ var beginanalysis=0;
+ var sumofperson=[];
+ var sumofperson2=[];
+
+ var sumemotion=0;
+
+var inputs=[];
+var trainingoutputs=[1,-1];
+ var countperson=0;
+ var specialcase=0;
+ var sumnewtest=[];
+ var superArrayHigh=[];
+ var superArrayLow=[];
+// var bell = new Wad({source : 'PlayStation.mp3'})
+// bell.play()
+// bell.stop()
+///Sound visualization
+var inputQ;
+function done () {
+clearTimeout(myTimer);
+console.log('i am done', sumofperson)
+var one=0;
+var two=0;
+if (sumofperson.length>1) {
+for(var i=0; i<sumofperson.length;i++){
+  one+=sumofperson[i]/1.618;
+ 
+}
+}
+
+if (sumofperson2.length>1) {
+for(var i=0; i<sumofperson2.length;i++){
+  two+=sumofperson2[i]/1.618;
+
+}
+}
+inputs[0]= one;
+inputs[1]= two;
+console.log('iamdone2',sumofperson2)
+console.log('inputs', inputs)
+
+
+beginanalysis=0;
+if (sumofperson.length>1 && sumofperson2.length>1) {
+ // neuralnetwork();
+}
+var three=0;
+if (specialcase==1) {
+for(var i=0; i<sumnewtest.length;i++){
+  three+=sumnewtest[i]/1.618;
+
+
+}
+
+
+inputQ=three;
+
+}
+
+
+}
+
+function testbaby () {
+
+  beginanalysis=1; 
+  specialcase=1;
+
+
+
+}
+
+
+
+if (true) {}
+onSuccess();
+function getAverageVolume(array) { 
+    var values = 0;  
+
+    // get all the frequency amplitudes 
+    for (var i = 0; i < array.length; i++) { 
+        values += array[i]; 
+    } 
+    return values / (array.length); 
+} 
+var dataArray;
+    var barHeight;
+   var average;
+   var superArrayHigh = new Array;
+   var superArrayLow = new Array; 
+   var rateArray = new Array;
+    var finalrateArray = new Array;
+    
+function onSuccess(stream) { 
+
+  
+
+    var context = new (window.AudioContext || window.webkitAudioContext)();
+    var mediaStreamSource = context.createMediaStreamSource(stream); 
+     
+    var analyser = context.createAnalyser(); 
+    analyser.smoothingTimeConstant = 0.3; 
+    analyser.fftSize = 1024; 
+    analyser.frequency= 528; 
+     
+    var javascriptNode = context.createScriptProcessor(2048, 1, 1); 
+     
+    javascriptNode.onaudioprocess = function(e) { 
+        //var sample = e.inputBuffer.getChannelData(0); 
+
+if (beginanalysis==1) {
+  console.log('ron',beginanalysis)
+//myTimer=setTimeout(Palpha, 2000);
+
+}
+        // get the average, bincount is fftsize / 2 
+        dataArray =  new Uint8Array(analyser.frequencyBinCount); 
+        analyser.getByteFrequencyData(dataArray); 
+         //console.log(dataArray);
+        // calculate average 
+         average = getAverageVolume(dataArray) 
+        // setTimeout(Palpha, 3000);//timer
+        // print value out 
+        //log(average); 
+ //console.log(average)
+   var IQ =average;//-2
+
+var PQ = Math.abs(IQ)* 1;
+
+var MQTfirst = ((IQ*(PQ) + ((IQ+1)*(PQ-1)) + 1)); 
+
+var MQTsecond = (((Math.abs(IQ)+ 1) * -1) + ((Math.abs(IQ)+2) * -2)) + ((Math.abs(IQ)+3) * -3) + ((Math.abs(IQ)+4) * -3) + ((Math.abs(IQ)+4) * -2) + ((Math.abs(IQ)+4) * -1) +(Math.abs(IQ)+5) + ((Math.abs(IQ)+5) * 2)  + ((Math.abs(IQ)+5) * 3);
+
+// var MQTthird =
+ 
+
+ var FinalMQT = MQTfirst-MQTsecond;
+ FinalMQT=Math.sin(FinalMQT);
+  superArrayHigh.push(FinalMQT);
+  finaldata.push(FinalMQT);
+        // if (average >= 85) {
+        //   //console.log('rude', average);
+        //   superArrayHigh.push(average);
+          
+        // }
+
+        // if (average <= 10) {
+
+        //   //console.log('soft', average);
+        // superArrayLow.push(average); 
+        // }
+         
+
+    }; 
+     
+    // stream -> mediaSource -> analyser -> javascriptNode -> destination 
+    mediaStreamSource.connect(analyser); 
+    analyser.connect(javascriptNode); 
+    javascriptNode.connect(context.destination); 
+
+
+}
+function onError() { 
+    alert('Error'); 
+} 
+
+function log(logVal) { 
+    getLog().innerHTML = logVal + '\n<br>'; 
+} 
+
+function getCanvas() { 
+    return document.getElementById('mycanvas'); 
+}     
+  
+function getLog() { 
+    return document.getElementById('mylog'); 
+} 
+   
+function documentReady() { 
+    if(navigator.getUserMedia) { 
+        navigator.getUserMedia({video: false, audio: true}, onSuccess, onError); 
+    } else if(navigator.webkitGetUserMedia) { 
+        navigator.webkitGetUserMedia({video: false, audio: true}, onSuccess, onError); 
+    } 
+} 
+
+//Sound
+
+var recognizing;
+
+var recognition = new webkitSpeechRecognition();
+recognition.continuous = true;
+//recognition.lang = 'zh-cn';
+reset();
+recognition.onend = reset();
+
+
+recognition.onresult = function (event) {
+  //startaudio();
+  for (var i = event.resultIndex; i < event.results.length; ++i) {
+    if (event.results[i].isFinal) {
+      textarea.value += event.results[i][0].transcript;
+    }
+  }
+}
+
+function reset() {
+  recognizing = false;
+  //button.innerHTML = "Click to Speak";
+
+}
+
+function toggleStartStop() {
+  console.log('wood');
+
+console.log('clm')
+
+  if (recognizing) {
+    recognition.stop();
+     if (superArrayHigh.length > superArrayLow.length) {
+      //document.getElementById("textarea").value ="YOU ARE TOO ANXIOUS OR EXCITED.";
+     }
+
+       if (superArrayLow.length > superArrayHigh.length) {
+      //document.getElementById("textarea").value ="YOU ARE CALM AND NOT WORRIED.";
+     }
+
+    reset();
+  } else {
+    recognition.start();
+    document.getElementById("textarea").value ="";
+     document.getElementById("fg").value ="";
+     //console.log(finalrateArray);
+    //superArrayLow =[];
+    //superArrayHigh=[];
+    console.log('speaking');
+    
+    recognizing = true;
+     button.innerHTML = "Click to Stop";
+  }
+
+
+
+}
+
+
+
+
+function series () {
+
+
+
+
+
+
+
+var samplearray = superArrayHigh; 
+
+//console.log(samplearray)
+var evaulate =[];
+for (var i=0; i<samplearray.length; i++) {
+
+var stroke1 = samplearray[Math.floor(Math.random()*samplearray.length)];
+
+var indexofStroke1 = samplearray.indexOf(stroke1);
+
+var stroke2 = samplearray[indexofStroke1+5];
+
+var indexofStroke2 = samplearray.indexOf(stroke2)
+
+
+var stroke3 = samplearray[indexofStroke2-1];
+var stroke4 = samplearray[indexofStroke2+1];
+
+
+var indexofStroke3 = samplearray.indexOf(stroke3);
+var indexofStroke4 = samplearray.indexOf(stroke4);
+
+var stroke5 = samplearray[indexofStroke3+5];
+var stroke6 = samplearray[indexofStroke4+5];
+var indexofStroke5 = samplearray.indexOf(stroke5);
+var indexofStroke6 = samplearray.indexOf(stroke6);
+
+//console.log('大',stroke1, stroke2, stroke3,stroke4,stroke5,stroke6);
+
+if (stroke1>0) {
+evaulate.push(stroke1)
+}
+if (stroke2>0) {
+evaulate.push(stroke2)
+}
+if (stroke3>0) {
+evaulate.push(stroke3)
+}
+if (stroke4>0) {
+evaulate.push(stroke4)
+}
+if (stroke5>0) {
+evaulate.push(stroke5)
+}
+if (stroke6>0) {
+evaulate.push(stroke6)
+}
+
+
+
+
+samplearray.splice(indexofStroke1, 1);
+
+samplearray.splice(indexofStroke2, 1);
+samplearray.splice(indexofStroke3, 1);
+ samplearray.splice(indexofStroke4, 1);
+samplearray.splice(indexofStroke5, 1);
+samplearray.splice(indexofStroke6, 1);
+  
+
+
+if (samplearray.length<=6) {
+  break;
+}
+
+}
+
+
+
+//console.log('22 cars garage', evaulate.length, superArrayHigh.length)
+
+var convert = superArrayHigh;
+//convert=convert.toString();
+//finaldata = convert;
+ //console.log('data',convert)
+var sum=0;
+var output=0;;
+for(var i =0; i<superArrayHigh.length;i++) {
+  var IQ =superArrayHigh[i]; ;//-2
+
+var PQ = Math.abs(IQ)+ 1;
+
+var MQTfirst = ((IQ*(PQ) + ((IQ+1)*(PQ-1)) + 1)); 
+
+var MQTsecond = (((Math.abs(IQ)+ 1) * -1) + ((Math.abs(IQ)+2) * -2)) + ((Math.abs(IQ)+3) * -3) + ((Math.abs(IQ)+4) * -3) + ((Math.abs(IQ)+4) * -2) + ((Math.abs(IQ)+4) * -1) +(Math.abs(IQ)+5) + ((Math.abs(IQ)+5) * 2)  + ((Math.abs(IQ)+5) * 3);
+
+// var MQTthird =
+ 
+
+ var FinalMQT = MQTfirst-MQTsecond;
+sum = sum +FinalMQT;
+
+output = 1.618/sum
+//Math.sin(sum)
+
+
+
+
+
+
+}
+
+var getratio = 8-1.618;
+
+var square = getratio * getratio + convert.length;
+
+square = square/(square+convert[Math.floor(Math.random()*convert.length)]);
+
+var bottomhalf = sum + square;
+
+var almostthere = square/bottomhalf;
+var com = convert[Math.floor(Math.random()*convert.length)];
+var special = com * com
+
+var truefinal = Math.sqrt(almostthere * special);
+
+
+
+
+//6 variables 
+
+var  k = FinalMQT;
+var m = sum;
+
+var t = 5; 
+
+var componentA = Math.sqrt(k/m *(5));
+var superA = Math.sin(1.618) * componentA;
+
+
+var superB = Math.cos(3.14) * Math.sqrt(k/m *(superArrayHigh.length)); 
+
+
+
+var zhongyu = 1/(4*(superA+superB));
+
+
+
+
+console.log(superA, superB, superA+superB, zhongyu);
+
+
+console.log(truefinal);
+
+
+
+
+
+
+
+if (truefinal>=0.05 && truefinal <0.08) {
+responsiveVoice.speak("You seem fine.");
+
+}
+
+if (truefinal>=0.08) {
+responsiveVoice.speak("You are feeling really good.");
+
+}
+if (truefinal<0.05 && truefinal>0.02) {
+  responsiveVoice.speak("You sound a bit stressed, relax.");
+}
+
+if (truefinal<=0.02) {
+  responsiveVoice.speak("Are you angry?");
+}
+  
+
+
+
+console.log('MQT',sum,output,truefinal, special)
+//setTimeout(startloop, 1000);
+//startloop();
+}
+
+function startloop () {
+
+newint++
+setTimeout(actuallearn, 1000);
+//actuallearn();
+function actuallearn () {
+  var mey = 'positive'+newint;
+var ref = database.ref(mey)
+ref.on('value',gotData, errData);
+//dontcontinue=0;
+function gotData(data) {
+
+//console.log(data.child())
+var coordinates =data.val();
+if (coordinates==null) {
+
+  dontcontinue=1;
+
+
+  fr();
+    console.log('STOP!!!!!');
+}
+
+if (dontcontinue==0) {
+querydata=coordinates;
+//console.log(coordinates)
+var keys = Object.keys(coordinates)
+console.log(coordinates, finaldata)
+
+console.log(coordinates.length, finaldata.length)
+var max=0;
+if (coordinates.length>finaldata.length) {
+max = coordinates.length;
+}
+if (coordinates.length<finaldata.length) {
+  max = finaldata.length;
+}
+//console.log('max', max)
+
+for(var i=0; i<max;i++) {
+
+var newP = finaldata[i];
+
+var oldP = coordinates[i];
+var mop = Math.abs(newP-oldP)
+//console.log(mop)
+if (newP==oldP || mop <0.1) {
+  supercount++
+}
+ 
+}
+
+  console.log('similarity', supercount, finaldata.length)
+  var finalanswer = supercount/finaldata.length; 
+
+
+  if (finalanswer>=0.5) {
+    console.log('black dynamite its positive')
+    sumemotion++;
+  }
+ querydata=data.val();
+}
+
+}
+function errData(err) {
+   console.log(err)
+}
+
+if(dontcontinue==0) {
+startloop();
+}
+
+
+}
+
+
+}
+
+
+
+function fr () {
+  var jol  = sumemotion/finaldata.length;
+
+console.log('jol',jol, sumemotion, finaldata.length)
+if (sumemotion>=5) {
+  responsiveVoice.speak("From learned data, I say your emotion is positive");
+}
+else
+  responsiveVoice.speak("From learned data, I say your emotion is negative");
+
+}
+
+
+
+
+
+function sendpos () {
+console.log('positive');
+record=10;
+
+setTimeout(series,5000);
+    // var matchedinput =val;
+       var ref=database.ref('positive'+record);
+//finaldata.push(record)
+ref.set(finaldata);
+
+}
+
+
+// function sendneg() {
+
+//        var ref=database.ref('negative');
+
+// ref.set(finaldata);
+
+// console.log('negative');
+// }
+
+
+
+
+
+
+
+
+
+</script> 
+</head> 
+
+<body onload="documentReady();"> 
+  <!--  <canvas id="mycanvas"></canvas>  -->
+   <div id="mylog"></div> 
+</body> 
 </html>
